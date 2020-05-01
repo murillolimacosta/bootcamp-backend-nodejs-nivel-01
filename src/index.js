@@ -7,6 +7,18 @@ app.use(express.json());
 
 const projects = [];
 
+/**
+ * Função que simula a aplicação de um middleware, 
+ * utilizando um log simples.
+ * 
+ * @param {object} request 
+ * @param {object} response 
+ * @param {object} next 
+ * 
+ * @return {function}
+ * 
+ * @author Murillo Lima Costa
+ */
 function logRequests(request, response, next) {
 
     const { method, url } = request;
@@ -18,6 +30,24 @@ function logRequests(request, response, next) {
     return next();
 }
 
+/**
+ * Registro da função "logRequests" como middleware,
+ * para todos os métodos registrados.
+ */
+app.use(logRequests);
+
+/**
+ * Função que simula a aplicação de um middleware, 
+ * utilizando uma simples do parâmetro id.
+ * 
+ * @param {object} request 
+ * @param {object} response 
+ * @param {object} next 
+ * 
+ * @return {function} next()
+ * 
+ * @author Murillo Lima Costa
+ */
 function validateProjectId(request, response, next) {
     
     const { id } = request.params;
@@ -29,10 +59,16 @@ function validateProjectId(request, response, next) {
     return next();
 }
 
-app.use(logRequests);
-
+/**
+ * Registro da função "logRequests" como middleware,
+ * somente para métodos com o tipo de parâmetro 
+ * 'route'.
+ */  
 app.use('/projects/:id', validateProjectId);
 
+/**
+ *  Método que retorna a lista de projetos.
+ */
 app.get('/projects', (request,response) => {
 
     const { title } = request.query;
@@ -44,6 +80,9 @@ app.get('/projects', (request,response) => {
     return response.json(result);
 });
 
+/**
+ * Método que inserção de projetos.
+ */
 app.post('/projects', (request,response) => {
 
     const {title, owner} = request.body;
@@ -57,6 +96,9 @@ app.post('/projects', (request,response) => {
     return response.json(project);
 });
 
+/**
+ * Método de alteração de projetos
+ */
 app.put('/projects/:id', (request,response) => {
 
     const {id} = request.params;
@@ -76,6 +118,9 @@ app.put('/projects/:id', (request,response) => {
     return response.json(project);
 });
 
+/**
+ * Método de exclusão de projetos.
+ */
 app.delete('/projects/:id', (request,response) => {
 
     const {id} = request.params;
@@ -91,6 +136,7 @@ app.delete('/projects/:id', (request,response) => {
     return response.status(204).send();
 });
 
+// Registrando a porta 3333
 app.listen(3333, () => {
     console.log("Backend started!");
 });
